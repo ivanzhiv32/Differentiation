@@ -50,5 +50,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Differentiation\Differentiation.csproj">
+      <Project>{fdbd6a64-d29a-4a80-8957-0170cbd4704c}</Project>
+      <Name>Differentiation</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Differentiation", "Differentiation\Differentiation.csproj", "{FDBD6A64-D29A-4A80-8957-0170CBD4704C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{C3D0877A-D483-4189-A741-85224C6608A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDBD6A64-D29A-4A80-8957-0170CBD4704C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDBD6A64-D29A-4A80-8957-0170CBD4704C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDBD6A64-D29A-4A80-8957-0170CBD4704C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDBD6A64-D29A-4A80-8957-0170CBD4704C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D0877A-D483-4189-A741-85224C6608A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D0877A-D483-4189-A741-85224C6608A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D0877A-D483-4189-A741-85224C6608A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D0877A-D483-4189-A741-85224C6608A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52D36602-8699-46BC-9004-8E9B1166D5BF}
+	EndGlobalSection
+EndGlobal

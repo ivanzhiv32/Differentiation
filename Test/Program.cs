@@ -14,23 +14,32 @@ namespace Test
         {
             List<Point> points = new List<Point>();
             points.Add(new Point(3, 1));
-            points.Add(new Point(4, 3));
-            points.Add(new Point(5, 0));
-            points.Add(new Point(6, 6));
+            points.Add(new Point(5, 3));
+            points.Add(new Point(7, 0));
+            points.Add(new Point(9, 6));
+            points.Add(new Point(11, 3));
+            points.Add(new Point(13, 9));
+            points.Add(new Point(15, 4));
+            points.Add(new Point(17, 10));
+            points.Add(new Point(19, 1));
+            points.Add(new Point(21, 5));
+            points.Add(new Point(23, 0));
+            points.Add(new Point(25, 7));
 
             Derivative derivative = new Derivative(points);
-            Dictionary<TypeDifference, double> res = derivative.FiniteDifferenceMethod(points[1]);
+            Dictionary<TypeDifference, double> res = derivative.FiniteDifferenceMethod(points[4]);
 
             foreach (TypeDifference t in res.Keys)
             {
                 Console.WriteLine(res[t]);
             }
 
-            double qua = derivative.QuadraticInterpolationMethod(points[1]);
-            double cub = derivative.CubicInterpolationMethod(points[1]);
-            double newton = derivative.NewtonPolynomialMethod(points[1], 3);
+            double qua = derivative.QuadraticInterpolationMethod(points[3]);
+            double cub = derivative.CubicInterpolationMethod(points[3]);
+            double newton = derivative.NewtonPolynomialMethod(points[3], 7);
 
-            Console.WriteLine("Квадратик = {0} и Кубик = {1} и еще Ньютон = {2}", qua, cub, newton);
+            Console.WriteLine("Квадратик = {0} и Кубик = {1}", qua, cub);
+            Console.WriteLine("Ньютон = {0}", newton);
 
             int fuckyou = derivative.Factorial(3);
 

@@ -52,22 +52,31 @@ namespace Differentiation
             return isConstant;
         }
 
-        private double GetDeltaY(Point point) 
+        public double GetDeltaY(int degree, int numPoint)
         {
-            Dictionary<TypeDifference, double> dictionary = FiniteDifferenceMethod(point);
+            double result;
 
-            double deltaY = double.NaN;
-            foreach (TypeDifference type in dictionary.Keys)
-            {
-                if (!double.IsNaN(dictionary[type]))
-                {
-                    deltaY = dictionary[type];
-                    break;
-                }
-            }
+            if (degree == 1) result = points[numPoint + 1].Y - points[numPoint].Y;
+            else result =  GetDeltaY(degree - 1, numPoint + 1) - GetDeltaY(degree - 1, numPoint);
 
-            return deltaY;
+            return result;
         }
+        //private double GetDeltaY(Point point) 
+        //{
+        //    Dictionary<TypeDifference, double> dictionary = FiniteDifferenceMethod(point);
+
+        //    double deltaY = double.NaN;
+        //    foreach (TypeDifference type in dictionary.Keys)
+        //    {
+        //        if (!double.IsNaN(dictionary[type]))
+        //        {
+        //            deltaY = dictionary[type];
+        //            break;
+        //        }
+        //    }
+
+        //    return deltaY;
+        //}
 
         public Dictionary<TypeDifference, double> FiniteDifferenceMethod(Point point) 
         {
@@ -100,45 +109,42 @@ namespace Differentiation
 
         public double QuadraticInterpolationMethod(Point point) 
         {
-            double deltaY = GetDeltaY(point);
-
             double h = points[1].X - points[0].X;
             double q = (point.X - points[0].X) / h;
-            double result = 1 / h * (deltaY + (2 * q - 1) / 2 * Math.Pow(deltaY, 2));
+            double result = (GetDeltaY(1, points.IndexOf(point)) + (2 * q - 1) / 2 * GetDeltaY(2, points.IndexOf(point))) / h;
 
             return result;
         }
 
         public double CubicInterpolationMethod(Point point)
         {
-            double deltaY = GetDeltaY(point);
             double h = points[1].X - points[0].X;
             double q = (point.X - points[0].X) / h;
 
-            double result = 1 / h * (deltaY + (2 * q - 1) / 2 * Math.Pow(deltaY, 2) + (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * Math.Pow(deltaY, 3));
+            double result = (GetDeltaY(1, points.IndexOf(point)) + (2 * q - 1) / 2 * GetDeltaY(2, points.IndexOf(point)) + 
+                            (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * GetDeltaY(3, points.IndexOf(point))) / h;
 
             return result;
         }
 
-        //Не работает
-        public double NewtonPolynomialMethod(Point point, int n) 
+        public double NewtonPolynomialMethod(Point point, int n)
         {
             if (n < 0) throw new Exception("Порядок конечной разности не может быть отрицательным числом.");
 
-            double deltaY = GetDeltaY(point);
+            //double deltaY = GetDeltaY(point);
             double h = points[1].X - points[0].X;
             double q = (point.X - points[0].X) / h;
 
             double result = point.Y;
             for (int i = 1; i < n; i++)
             {
-                double res = 1;
+                double mult = 1;
                 for (int j = 1; j <= i; j++)
                 {
-                    res *= q - j + 1;
+                    mult *= q - j + 1;
                 }
-                res /= Factorial(i);
-                res *= Math.Pow(deltaY, i);
+                double res = mult / Factorial(i);
+                res *= GetDeltaY(i, points.IndexOf(point));
                 result += res;
             }
             result /= h;

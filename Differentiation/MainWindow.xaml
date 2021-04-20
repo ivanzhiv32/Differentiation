@@ -26,7 +26,7 @@
                 </StackPanel>
             </DockPanel>
             <Label Content="Укажите порядок производной:"/>
-            <xctk:IntegerUpDown x:Name="UdDegree" Value="1" Minimum="1"></xctk:IntegerUpDown>
+            <xctk:IntegerUpDown x:Name="UdDegree" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
             <Label>Выберите метод нахождения:</Label>
             <ComboBox x:Name="CbMethods" SelectionChanged="CbMethods_SelectionChanged">
                 <ComboBoxItem>Метод конечных разностей</ComboBoxItem>
@@ -37,9 +37,17 @@
                 <ComboBoxItem>Метод Рунге</ComboBoxItem>
             </ComboBox>
             <Button x:Name="BtFindDerivative" Click="BtFindDerivative_Click">Найти производную</Button>
+            <Label x:Name="LbTypesDifference">Тип конечной разности:</Label>
+            <ComboBox x:Name="CbTypesDifference">
+                <ComboBoxItem>Левая</ComboBoxItem>
+                <ComboBoxItem>Правая</ComboBoxItem>
+                <ComboBoxItem>Центральная</ComboBoxItem>
+            </ComboBox>
             <Label x:Name="LbNewtonPolynomial">Укажите порядок полинома Ньютона:</Label>
             <xctk:IntegerUpDown x:Name="UdDegreeNewton" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+        
         </StackPanel>
         <lvc:CartesianChart x:Name="Chart" Grid.Column="1"></lvc:CartesianChart>
+    
     </Grid>
 </Window>

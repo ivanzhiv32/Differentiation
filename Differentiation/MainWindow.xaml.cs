@@ -31,10 +31,11 @@ namespace Differentiation
         {
             InitializeComponent();
             CbMethods.SelectedIndex = 0;
+            CbTypesDifference.SelectedIndex = 0;
             seriesCollection = new SeriesCollection();
 
-            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>() };
-            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>() };
+            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0 };
+            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0 };
 
             Chart.Series = seriesCollection;
         }
@@ -51,7 +52,29 @@ namespace Differentiation
             {
                 List<Point> points = GetPoints();
                 Derivative der = new Derivative(points);
-                List<Point> pointsDerivative = der.CubicInterpolationMethod(1);
+                List<Point> pointsDerivative = new List<Point>();
+
+                switch (CbMethods.SelectedIndex) 
+                {
+                    case 0:
+                        pointsDerivative = der.CubicInterpolationMethod((int)UdDegree.Value);
+                        break;
+                    case 1:
+                        pointsDerivative = der.QuadraticInterpolation((int)UdDegree.Value);
+                        break;
+                    case 2:
+                        pointsDerivative = der.CubicInterpolationMethod((int)UdDegree.Value);
+                        break;
+                    case 3:
+                        pointsDerivative = der.CubicInterpolationMethod((int)UdDegree.Value);
+                        break;
+                    case 4:
+                        pointsDerivative = der.NewtonPolynomialMethod((int)UdDegreeNewton.Value,(int)UdDegree.Value);
+                        break;
+                    case 5:
+                        pointsDerivative = der.QuadraticInterpolation((int)UdDegree.Value);
+                        break;
+                }
 
                 seriesCollection.Clear();
                 functionLine.Values.Clear();
@@ -72,16 +95,17 @@ namespace Differentiation
 
         private void CbMethods_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CbMethods.SelectedIndex == 4 && !LbNewtonPolynomial.IsEnabled && !UdDegreeNewton.IsEnabled)
+            if (CbMethods.SelectedIndex == 4)
             {
-                LbNewtonPolynomial.IsEnabled = true;
-                UdDegreeNewton.IsEnabled = true;
+                LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Visible;
+                LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
             }
-            else if (LbNewtonPolynomial.IsEnabled && UdDegreeNewton.IsEnabled) 
+            else if (CbMethods.SelectedIndex == 0) 
             {
-                LbNewtonPolynomial.IsEnabled = false;
-                UdDegreeNewton.IsEnabled = false;
+                LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Hidden;
+                LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Visible;
             }
+            else LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
         }
 
         private List<Point> GetPoints() 

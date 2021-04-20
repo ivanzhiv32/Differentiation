@@ -25,10 +25,10 @@ namespace Test
                 point.Add(new Point(i, functionExpression.Evaluate(variable).RealValue));
             }
 
-            //for (int i = 0; i < point.Count; i++)
-            //{
-            //    Console.WriteLine("X = {0}, Y = {1}", point[i].X, point[i].Y);
-            //}
+            for (int i = 0; i < point.Count; i++)
+            {
+                Console.WriteLine("X = {0}, Y = {1}", point[i].X, point[i].Y);
+            }
 
             Derivative der = new Derivative(point);
 

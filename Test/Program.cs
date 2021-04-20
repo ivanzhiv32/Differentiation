@@ -33,7 +33,7 @@ namespace Test
             Derivative der = new Derivative(point);
 
             Console.WriteLine("Конечная разность");
-            List<Point> finalDiff = der.FiniteDifferenceMethod(TypeDifference.Center, 5);
+            List<Point> finalDiff = der.FiniteDifferenceMethod(TypeDifference.Right, 5);
             for (int i = 0; i < finalDiff.Count; i++)
             {
                 Console.WriteLine("Точка №{0} = {1:0.00}; {2:0.000}", i, finalDiff[i].X, finalDiff[i].Y);

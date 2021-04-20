@@ -57,7 +57,7 @@ namespace Differentiation
                 switch (CbMethods.SelectedIndex) 
                 {
                     case 0:
-                        pointsDerivative = der.CubicInterpolationMethod((int)UdDegree.Value);
+                        pointsDerivative = der.FiniteDifferenceMethod((TypeDifference)CbTypesDifference.SelectedIndex, (int)UdDegree.Value);
                         break;
                     case 1:
                         pointsDerivative = der.QuadraticInterpolation((int)UdDegree.Value);

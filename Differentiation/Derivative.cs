@@ -52,12 +52,12 @@ namespace Differentiation
             return isConstant;
         }
 
-        public double GetDeltaY(int degree, int numPoint)
+        public double GetDeltaY(List<Point> points, int degree, int numPoint)
         {
             double result;
 
             if (degree == 1) result = points[numPoint + 1].Y - points[numPoint].Y;
-            else result =  GetDeltaY(degree - 1, numPoint + 1) - GetDeltaY(degree - 1, numPoint);
+            else result =  GetDeltaY(points, degree - 1, numPoint + 1) - GetDeltaY(points, degree - 1, numPoint);
 
             return result;
         }
@@ -93,17 +93,19 @@ namespace Differentiation
 
         public List<Point> QuadraticInterpolation(int degree)
         {
-            List<Point> result = new List<Point>();
-            double h = points[1].X - points[0].X;
+            List<Point> result = new List<Point>(points);
+            double h = result[1].X - result[0].X;
             double q;
 
             for (int i = 0; i < degree; i++)
             {
-                for (int j = 0; j < points.Count - 2; j++)
+                List<Point> tempResult = new List<Point>();
+                for (int j = 0; j < result.Count - 2; j++)
                 {
-                    q = (points[j].X - points[j + 1].X) / h;
-                    result.Add(new Point(points[j].X, (GetDeltaY(1, j) + (2 * q - 1) / 2 * GetDeltaY(2, j)) / h));
+                    q = (result[j].X - result[j + 1].X) / h;
+                    tempResult.Add(new Point(result[j].X, (GetDeltaY(result, 1, j) + (2 * q - 1) / 2 * GetDeltaY(result, 2, j)) / h));
                 }
+                result = tempResult;
             }
 
             return result;
@@ -111,52 +113,55 @@ namespace Differentiation
 
         public List<Point> CubicInterpolationMethod(int degree)
         {
-            List<Point> result = new List<Point>();
-            double h = points[1].X - points[0].X;
+            List<Point> result = new List<Point>(points);
+            double h = result[1].X - result[0].X;
             double q;
             for (int i = 0; i < degree; i++)
             {
-                for (int j = 0; j < points.Count - 3; j++)
+                List<Point> tempResult = new List<Point>();
+                for (int j = 0; j < result.Count - 3; j++)
                 {
-                    q = (points[j].X - points[j + 1].X) / h;
-                    result.Add(new Point(points[j].X, (GetDeltaY(1, j) + (2 * q - 1) / 2 * GetDeltaY(2, j) +
-                            (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * GetDeltaY(3, j)) / h));
+                    q = (result[j].X - result[j + 1].X) / h;
+                    tempResult.Add(new Point(result[j].X, (GetDeltaY(result, 1, j) + (2 * q - 1) / 2 * GetDeltaY(result, 2, j) +
+                            (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * GetDeltaY(result, 3, j)) / h));
                 }
+                result = tempResult;
             }
 
             return result;
         }
 
-        public List<Point> NewtonPolynomialMethod(int n)
+        public List<Point> NewtonPolynomialMethod(int degreePolynom, int degreeDerivate)
         {
-            if (n < 0) throw new Exception("Порядок конечной разности не может быть отрицательным числом.");
+            if (degreePolynom < 0) throw new Exception("Порядок конечной разности не может быть отрицательным числом.");
 
-            List<Point> resultList = new List<Point>();
-            double h = points[1].X - points[0].X;
-            double q;
-            double result;
-
-            for (int k = 0; k < points.Count; k++)
+            List<Point> result = new List<Point>(points);
+            double h = result[1].X - result[0].X;
+            double q, tempResult;
+            for (int m = 0; m < degreeDerivate; m++)
             {
-                if (k == points.Count - n) break;
-                result = points[k].Y;
-                for (int i = 1; i < n; i++)
+                List<Point> tempResultList = new List<Point>();
+                for (int k = 0; k < result.Count - degreePolynom; k++)
                 {
-                    
-                    q = (points[i].X - points[i + 1].X) / h;
-                    double mult = 1;
-                    for (int j = 0; j <= i; j++)
+                    tempResult = result[k].Y;
+                    for (int i = 1; i < degreePolynom; i++)
                     {
-                        mult *= q - j + 1;
+                        q = (result[i].X - result[i + 1].X) / h;
+                        double mult = 1;
+                        for (int j = 0; j <= i; j++)
+                        {
+                            mult *= q - j + 1;
+                        }
+                        double res = mult / Factorial(i);
+                        res *= GetDeltaY(result, i, k);
+                        tempResult += res;
                     }
-                    double res = mult / Factorial(i);
-                    res *= GetDeltaY(i, k);
-                    result += res;
+                    tempResult /= h;
+                    tempResultList.Add(new Point(result[k].X, tempResult / 10));
                 }
-                result /= h;
-                resultList.Add(new Point(points[k].X, result / 10));
+                result = tempResultList;
             }
-            return resultList;
+            return result;
         }
     }
 }

@@ -61,22 +61,6 @@ namespace Differentiation
 
             return result;
         }
-        //private double GetDeltaY(Point point) 
-        //{
-        //    Dictionary<TypeDifference, double> dictionary = FiniteDifferenceMethod(point);
-
-        //    double deltaY = double.NaN;
-        //    foreach (TypeDifference type in dictionary.Keys)
-        //    {
-        //        if (!double.IsNaN(dictionary[type]))
-        //        {
-        //            deltaY = dictionary[type];
-        //            break;
-        //        }
-        //    }
-
-        //    return deltaY;
-        //}
 
         public Dictionary<TypeDifference, double> FiniteDifferenceMethod(Point point) 
         {
@@ -107,49 +91,72 @@ namespace Differentiation
             return result;
         }
 
-        public double QuadraticInterpolationMethod(Point point) 
+        public List<Point> QuadraticInterpolation(int degree)
         {
+            List<Point> result = new List<Point>();
             double h = points[1].X - points[0].X;
-            double q = (point.X - points[0].X) / h;
-            double result = (GetDeltaY(1, points.IndexOf(point)) + (2 * q - 1) / 2 * GetDeltaY(2, points.IndexOf(point))) / h;
+            double q;
+
+            for (int i = 0; i < degree; i++)
+            {
+                for (int j = 0; j < points.Count - 2; j++)
+                {
+                    q = (points[j].X - points[j + 1].X) / h;
+                    result.Add(new Point(points[j].X, (GetDeltaY(1, j) + (2 * q - 1) / 2 * GetDeltaY(2, j)) / h));
+                }
+            }
 
             return result;
         }
 
-        public double CubicInterpolationMethod(Point point)
+        public List<Point> CubicInterpolationMethod(int degree)
         {
+            List<Point> result = new List<Point>();
             double h = points[1].X - points[0].X;
-            double q = (point.X - points[0].X) / h;
-
-            double result = (GetDeltaY(1, points.IndexOf(point)) + (2 * q - 1) / 2 * GetDeltaY(2, points.IndexOf(point)) + 
-                            (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * GetDeltaY(3, points.IndexOf(point))) / h;
+            double q;
+            for (int i = 0; i < degree; i++)
+            {
+                for (int j = 0; j < points.Count - 3; j++)
+                {
+                    q = (points[j].X - points[j + 1].X) / h;
+                    result.Add(new Point(points[j].X, (GetDeltaY(1, j) + (2 * q - 1) / 2 * GetDeltaY(2, j) +
+                            (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * GetDeltaY(3, j)) / h));
+                }
+            }
 
             return result;
         }
 
-        public double NewtonPolynomialMethod(Point point, int n)
+        public List<Point> NewtonPolynomialMethod(int n)
         {
             if (n < 0) throw new Exception("Порядок конечной разности не может быть отрицательным числом.");
 
-            //double deltaY = GetDeltaY(point);
+            List<Point> resultList = new List<Point>();
             double h = points[1].X - points[0].X;
-            double q = (point.X - points[0].X) / h;
+            double q;
+            double result;
 
-            double result = point.Y;
-            for (int i = 1; i < n; i++)
+            for (int k = 0; k < points.Count; k++)
             {
-                double mult = 1;
-                for (int j = 1; j <= i; j++)
+                if (k == points.Count - n) break;
+                result = points[k].Y;
+                for (int i = 1; i < n; i++)
                 {
-                    mult *= q - j + 1;
+                    
+                    q = (points[i].X - points[i + 1].X) / h;
+                    double mult = 1;
+                    for (int j = 0; j <= i; j++)
+                    {
+                        mult *= q - j + 1;
+                    }
+                    double res = mult / Factorial(i);
+                    res *= GetDeltaY(i, k);
+                    result += res;
                 }
-                double res = mult / Factorial(i);
-                res *= GetDeltaY(i, points.IndexOf(point));
-                result += res;
+                result /= h;
+                resultList.Add(new Point(points[k].X, result / 10));
             }
-            result /= h;
-
-            return result;
+            return resultList;
         }
     }
 }

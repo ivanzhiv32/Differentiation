@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Differentiation;
+using MathNet.Symbolics;
 
 namespace Test
 {
@@ -12,36 +13,44 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            List<Point> points = new List<Point>();
-            points.Add(new Point(3, 1));
-            points.Add(new Point(5, 3));
-            points.Add(new Point(7, 0));
-            points.Add(new Point(9, 6));
-            points.Add(new Point(11, 3));
-            points.Add(new Point(13, 9));
-            points.Add(new Point(15, 4));
-            points.Add(new Point(17, 10));
-            points.Add(new Point(19, 1));
-            points.Add(new Point(21, 5));
-            points.Add(new Point(23, 0));
-            points.Add(new Point(25, 7));
+            string funcString = "sin(x)";
+            SymbolicExpression functionExpression = SymbolicExpression.Parse(funcString);
+            Dictionary<string, FloatingPoint> variable = new Dictionary<string, FloatingPoint>();
+            variable["x"] = 0;
 
-            Derivative derivative = new Derivative(points);
-            Dictionary<TypeDifference, double> res = derivative.FiniteDifferenceMethod(points[4]);
-
-            foreach (TypeDifference t in res.Keys)
+            List<Point> point = new List<Point>();
+            for (double i = 0; i < 10; i += 0.1)
             {
-                Console.WriteLine(res[t]);
+                variable["x"] = i;
+                point.Add(new Point(i, functionExpression.Evaluate(variable).RealValue));
             }
 
-            double qua = derivative.QuadraticInterpolationMethod(points[3]);
-            double cub = derivative.CubicInterpolationMethod(points[3]);
-            double newton = derivative.NewtonPolynomialMethod(points[3], 7);
+            //for (int i = 0; i < point.Count; i++)
+            //{
+            //    Console.WriteLine("X = {0}, Y = {1}", point[i].X, point[i].Y);
+            //}
 
-            Console.WriteLine("Квадратик = {0} и Кубик = {1}", qua, cub);
-            Console.WriteLine("Ньютон = {0}", newton);
+            Console.WriteLine("Квадратичная интерполяция");
+            Derivative der = new Derivative(point);
+            List<Point> quadratik = der.QuadraticInterpolation(1);
+            for (int i = 0; i < quadratik.Count; i++)
+            {
+                Console.WriteLine("Точка №{0} = {1:0.000}; {2:0.000}", i, quadratik[i].X, quadratik[i].Y);
+            }
 
-            int fuckyou = derivative.Factorial(3);
+            Console.WriteLine("\nКубическая интерполяция");
+            List<Point> cubik = der.CubicInterpolationMethod(1);
+            for (int i = 0; i < cubik.Count; i++)
+            {
+                Console.WriteLine("Точка №{0} = {1:0.000}; {2:0.000}", i, cubik[i].X, cubik[i].Y);
+            }
+
+            Console.WriteLine("\nПолином Ньютона");
+            List<Point> newton = der.NewtonPolynomialMethod(9);
+            for (int i = 0; i < newton.Count; i++)
+            {
+                Console.WriteLine("Точка №{0} = {1:0.000}; {2:0.000}", i, newton[i].X, newton[i].Y);
+            }
 
             Console.Read();
         }

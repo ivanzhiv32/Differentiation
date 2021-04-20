@@ -1,12 +1,45 @@
-﻿<Window x:Class="Differentiation.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Differentiation"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" x:Class="Differentiation.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Численное дифференцирование" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Column="0">
+            <Label Content="Введите функцию:"/>
+            <TextBox x:Name="TbFunction" Text="sin(x)"></TextBox>
+            <DockPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                    <Label>Количество точек:</Label>
+                    <xctk:IntegerUpDown x:Name="UdNumberPoints" Value="60" Minimum="1"></xctk:IntegerUpDown>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="30,0,0,0">
+                    <Label>Шаг:</Label>
+                    <xctk:DoubleUpDown x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DoubleUpDown>
+                </StackPanel>
+            </DockPanel>
+            <Label Content="Укажите порядок производной:"/>
+            <xctk:IntegerUpDown x:Name="UdDegree" Value="1" Minimum="1"></xctk:IntegerUpDown>
+            <Label>Выберите метод нахождения:</Label>
+            <ComboBox x:Name="CbMethods" SelectionChanged="CbMethods_SelectionChanged">
+                <ComboBoxItem>Метод конечных разностей</ComboBoxItem>
+                <ComboBoxItem>Метод квадратичной интерполяции</ComboBoxItem>
+                <ComboBoxItem>Метод кубической интерполяции</ComboBoxItem>
+                <ComboBoxItem>Метод неопределенных коэффициентов</ComboBoxItem>
+                <ComboBoxItem>Метод Ньютона</ComboBoxItem>
+                <ComboBoxItem>Метод Рунге</ComboBoxItem>
+            </ComboBox>
+            <Button x:Name="BtFindDerivative" Click="BtFindDerivative_Click">Найти производную</Button>
+            <Label x:Name="LbNewtonPolynomial">Укажите порядок полинома Ньютона:</Label>
+            <xctk:IntegerUpDown x:Name="UdDegreeNewton" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+        </StackPanel>
+        <lvc:CartesianChart x:Name="Chart" Grid.Column="1"></lvc:CartesianChart>
     </Grid>
 </Window>

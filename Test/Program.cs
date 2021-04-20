@@ -30,8 +30,16 @@ namespace Test
             //    Console.WriteLine("X = {0}, Y = {1}", point[i].X, point[i].Y);
             //}
 
-            Console.WriteLine("Квадратичная интерполяция");
             Derivative der = new Derivative(point);
+
+            Console.WriteLine("Конечная разность");
+            List<Point> finalDiff = der.FiniteDifferenceMethod(TypeDifference.Center, 5);
+            for (int i = 0; i < finalDiff.Count; i++)
+            {
+                Console.WriteLine("Точка №{0} = {1:0.00}; {2:0.000}", i, finalDiff[i].X, finalDiff[i].Y);
+            }
+
+            Console.WriteLine("Квадратичная интерполяция");
             List<Point> quadratik = der.QuadraticInterpolation(6);
             for (int i = 0; i < quadratik.Count; i++)
             {

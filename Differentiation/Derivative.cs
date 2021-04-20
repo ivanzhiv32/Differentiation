@@ -21,7 +21,7 @@ namespace Differentiation
             this.points = points;
         }
 
-        public int Factorial(int num) 
+        private int Factorial(int num) 
         {
             if (num <= 0) throw new Exception("Для расчета факториала число должно быть больше нуля");
             
@@ -52,7 +52,7 @@ namespace Differentiation
             return isConstant;
         }
 
-        public double GetDeltaY(List<Point> points, int degree, int numPoint)
+        private double GetDeltaY(List<Point> points, int degree, int numPoint)
         {
             double result;
 
@@ -62,42 +62,34 @@ namespace Differentiation
             return result;
         }
 
-        public Dictionary<TypeDifference, double> FiniteDifferenceMethod(Point point) 
+        public List<Point> FiniteDifferenceMethod(TypeDifference typeDifference, int degreeDerivates)
         {
-            if (!CheckIncrement()) throw new Exception("Приращение аргумента непостоянно");
-            if (!points.Contains(point)) throw new Exception("Заданная точка не принадлежит дискретно заданной функции");
+            List<Point> result = new List<Point>(points);
 
-            Dictionary<TypeDifference, double> result = new Dictionary<TypeDifference, double>();
-            double h = points[1].X - points[0].X;
-            if (points.Count == points.IndexOf(point) + 1)
+            double h = result[1].X - result[0].X;
+
+            for (int i = 0; i < degreeDerivates; i++)
             {
-                result.Add(TypeDifference.Left, (point.Y - points[points.IndexOf(point) - 1].Y) / h);
-                result.Add(TypeDifference.Right, double.NaN);
-                result.Add(TypeDifference.Center, double.NaN);
+                List<Point> tempResult = new List<Point>();
+                for (int j = 1; j < result.Count - 1; j++)
+                {
+                    if (typeDifference == TypeDifference.Left) tempResult.Add(new Point(result[j].X, (result[j].Y - result[j - 1].Y) / h));
+                    if (typeDifference == TypeDifference.Right) tempResult.Add(new Point(result[j].X, (result[j + 1].Y - result[j].Y) / h));
+                    if (typeDifference == TypeDifference.Center) tempResult.Add(new Point(result[j].X, (result[j + 1].Y - result[j - 1].Y) / (2 * h)));
+                }
+                result = tempResult;
             }
-            else if (points.IndexOf(point) == 0)
-            {
-                result.Add(TypeDifference.Right, (points[points.IndexOf(point) + 1].Y - point.Y) / h);
-                result.Add(TypeDifference.Left, double.NaN);
-                result.Add(TypeDifference.Center, double.NaN);
-            }
-            else 
-            {
-                result.Add(TypeDifference.Left, (point.Y - points[points.IndexOf(point) - 1].Y) / h);
-                result.Add(TypeDifference.Right, (points[points.IndexOf(point) + 1].Y - point.Y) / h);
-                result.Add(TypeDifference.Center, (points[points.IndexOf(point) + 1].Y - points[points.IndexOf(point) - 1].Y) / 2 * h);
-            }
-            
+
             return result;
         }
 
-        public List<Point> QuadraticInterpolation(int degree)
+        public List<Point> QuadraticInterpolation(int degreeDerivates)
         {
             List<Point> result = new List<Point>(points);
             double h = result[1].X - result[0].X;
             double q;
 
-            for (int i = 0; i < degree; i++)
+            for (int i = 0; i < degreeDerivates; i++)
             {
                 List<Point> tempResult = new List<Point>();
                 for (int j = 0; j < result.Count - 2; j++)
@@ -111,12 +103,12 @@ namespace Differentiation
             return result;
         }
 
-        public List<Point> CubicInterpolationMethod(int degree)
+        public List<Point> CubicInterpolationMethod(int degreeDerivates)
         {
             List<Point> result = new List<Point>(points);
             double h = result[1].X - result[0].X;
             double q;
-            for (int i = 0; i < degree; i++)
+            for (int i = 0; i < degreeDerivates; i++)
             {
                 List<Point> tempResult = new List<Point>();
                 for (int j = 0; j < result.Count - 3; j++)

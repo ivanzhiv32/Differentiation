@@ -219,5 +219,49 @@ namespace Differentiation
 
             return result;
         }
+
+        public double StandartDevation(List<Point> startPoints, List<Point> finalPoints)
+        {
+            double s = 0;
+            int n = finalPoints.Count;
+            int k = 0;
+
+            for (int i = 0; i < finalPoints.Count; i++)
+            {
+                for (int j = k; j < startPoints.Count; j++)
+                {
+                    if (startPoints[j].X == finalPoints[i].X)
+                    {
+                        s += Math.Pow(Math.Abs(startPoints[j].Y - finalPoints[i].Y), 2);
+                        k = j;
+                        break;
+                    }
+                }
+            }
+            double result = Math.Sqrt(s / n);
+
+            return result;
+        }
+
+        public double AbsoluteDevation(List<Point> startPoints, List<Point> finalPoints)
+        {
+            double max = 0;
+            int k = 0;
+            for (int i = 0; i < finalPoints.Count; i++)
+            {
+                for (int j = k; j < startPoints.Count; j++)
+                {
+                    double tempMax = startPoints[j].Y - finalPoints[i].Y;
+                    if ((startPoints[j].X == finalPoints[i].X)&&((tempMax) > max))
+                    {
+                        max = tempMax;
+                        k = j;
+                        break;
+                    }
+                }
+            }
+
+            return max;
+        }
     }
 }

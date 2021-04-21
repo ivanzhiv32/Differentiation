@@ -49,7 +49,7 @@ namespace Test
             }
 
             Console.WriteLine("\nКубическая интерполяция");
-            List<Point> cubik = der.CubicInterpolationMethod(6);
+            List<Point> cubik = der.CubicInterpolationMethod(2);
             for (int i = 0; i < cubik.Count; i++)
             {
                 Console.WriteLine("Точка №{0} = {1:0.00}; {2:0.000}", i, cubik[i].X, cubik[i].Y);
@@ -61,6 +61,14 @@ namespace Test
             {
                 Console.WriteLine("Точка №{0} = {1:0.00}; {2:0.000}", i, newton[i].X, newton[i].Y);
             }
+
+            double quadratikStandDev = der.StandartDevation(point, quadratik);
+            double cubikStandDev = der.StandartDevation(point, cubik);
+            Console.WriteLine("Среднеквадратичное отклонение квадратика = {0}\nСреднеквадратичное отклонение кубика = {1}", quadratikStandDev, cubikStandDev);
+
+            double quadratikAbsDev = der.AbsoluteDevation(point, quadratik);
+            double cubikAbsDev = der.AbsoluteDevation(point, cubik);
+            Console.WriteLine("Среднеквадратичное отклонение квадратика = {0}\nСреднеквадратичное отклонение кубика = {1}", quadratikAbsDev, cubikAbsDev);
 
             Console.Read();
         }

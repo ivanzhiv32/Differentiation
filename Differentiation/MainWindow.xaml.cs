@@ -34,7 +34,7 @@ namespace Differentiation
             CbTypesDifference.SelectedIndex = 0;
             seriesCollection = new SeriesCollection();
 
-            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0 };
+            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0};
             derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0 };
 
             Chart.Series = seriesCollection;

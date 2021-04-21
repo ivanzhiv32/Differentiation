@@ -32,7 +32,7 @@ namespace Test
 
             Derivative der = new Derivative(point);
 
-            List<Point> runge = der.RungeMethod(2);
+            
 
             Console.WriteLine("Конечная разность");
             List<Point> finalDiff = der.FiniteDifferenceMethod(TypeDifference.Right, 5);

@@ -66,7 +66,7 @@ namespace Differentiation
                         pointsDerivative = der.CubicInterpolationMethod((int)UdDegree.Value);
                         break;
                     case 3:
-                        pointsDerivative = der.CubicInterpolationMethod((int)UdDegree.Value);
+                        pointsDerivative = der.MethodUndefinedCoefficients(7, (int)UdDegree.Value);
                         break;
                     case 4:
                         pointsDerivative = der.NewtonPolynomialMethod((int)UdDegreeNewton.Value,(int)UdDegree.Value);

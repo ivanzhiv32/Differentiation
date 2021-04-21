@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SolutionSystemEquations;
+using System;
 using System.Collections.Generic;
 using System.Windows;
+using SolutionSystemEquations;
+
 
 namespace Differentiation
 {
@@ -183,8 +186,15 @@ namespace Differentiation
                     }
                 }
             }
+            SystemEquations equations = new SystemEquations(matrixC, matrixFreeTerms);
+            double[,] res = equations.GausGordanMethod();
+            List<Point> tempResult = new List<Point>(result);
+            result.Clear();
 
-
+            for (int i = 0; i < tempResult.Count; i++)
+            {
+                result.Add(new Point(tempResult[i].X, res[i, 0]));
+            }
 
             return result;
         }

@@ -13,21 +13,43 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Grid.Column="0">
-            <Label Content="Введите функцию:"/>
-            <TextBox x:Name="TbFunction" Text="sin(x)"></TextBox>
+            <Label HorizontalAlignment="Center" Content="Функция f(x):"/>
+            <TextBox HorizontalAlignment="Center" Width="100" Height="25" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="TbFunction" Text="sin(x)"></TextBox>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.3*"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <!--<Label Content="Функция f(x):" Grid.Row="0" Grid.Column="0"/>
+                <TextBox Margin="0,0,0,0" x:Name="TbFunction" Text="sin(x)" Grid.Row="0" Grid.Column="1"></TextBox>-->
+                <Label Grid.Row="1" Grid.Column="0">Количество точек:</Label>
+                <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" x:Name="UdNumberPoints" Value="60" Minimum="1"></xctk:IntegerUpDown>
+                <Label Grid.Row="2" Grid.Column="0">Шаг изменения:</Label>
+                <xctk:DoubleUpDown Grid.Row="2" Grid.Column="2" x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DoubleUpDown>
+                <Label Grid.Row="3" Grid.Column="0" Content="Порядок производной:"/>
+                <xctk:IntegerUpDown Grid.Row="3" Grid.Column="2" x:Name="UdDegree" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+            </Grid>
+            <!--<Label Content="Введите функцию:"/>
+            <TextBox x:Name="TbFunction" Text="sin(x)"></TextBox>-->
             <DockPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                    <Label>Количество точек:</Label>
-                    <xctk:IntegerUpDown x:Name="UdNumberPoints" Value="60" Minimum="1"></xctk:IntegerUpDown>
+                    <!--<Label>Количество точек:</Label>
+                    <xctk:IntegerUpDown x:Name="UdNumberPoints" Value="60" Minimum="1"></xctk:IntegerUpDown>-->
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="30,0,0,0">
-                    <Label>Шаг:</Label>
-                    <xctk:DoubleUpDown x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DoubleUpDown>
+                    <!--<Label>Шаг:</Label>
+                    <xctk:DoubleUpDown x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DoubleUpDown>-->
                 </StackPanel>
             </DockPanel>
-            <Label Content="Укажите порядок производной:"/>
-            <xctk:IntegerUpDown x:Name="UdDegree" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
-            <Label>Выберите метод нахождения:</Label>
+            <!--<Label Content="Укажите порядок производной:"/>
+            <xctk:IntegerUpDown x:Name="UdDegree" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>-->
+            <Label>Метод нахождения:</Label>
             <ComboBox x:Name="CbMethods" SelectionChanged="CbMethods_SelectionChanged">
                 <ComboBoxItem>Метод конечных разностей</ComboBoxItem>
                 <ComboBoxItem>Метод квадратичной интерполяции</ComboBoxItem>
@@ -37,19 +59,33 @@
                 <ComboBoxItem>Метод Рунге</ComboBoxItem>
             </ComboBox>
             <Button x:Name="BtFindDerivative" Click="BtFindDerivative_Click">Найти производную</Button>
-            <Label x:Name="LbTypesDifference">Тип конечной разности:</Label>
-            <ComboBox x:Name="CbTypesDifference">
-                <ComboBoxItem>Левая</ComboBoxItem>
-                <ComboBoxItem>Правая</ComboBoxItem>
-                <ComboBoxItem>Центральная</ComboBoxItem>
-            </ComboBox>
-            <Label x:Name="LbNewtonPolynomial">Укажите порядок полинома Ньютона:</Label>
-            <xctk:IntegerUpDown x:Name="UdDegreeNewton" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
-            <Label x:Name="LbRunge">Укажите порядок точности для формулы Рунге</Label>
-            <xctk:IntegerUpDown x:Name="UdDegreeRunge" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
-        
+            <Grid>
+                <StackPanel Orientation="Vertical" Grid.Row="0">
+                    <Label x:Name="LbTypesDifference">Тип конечной разности:</Label>
+                    <ComboBox x:Name="CbTypesDifference">
+                        <ComboBoxItem>Левая</ComboBoxItem>
+                        <ComboBoxItem>Правая</ComboBoxItem>
+                        <ComboBoxItem>Центральная</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Row="0">
+                    <Label x:Name="LbNewtonPolynomial">Укажите порядок полинома Ньютона:</Label>
+                    <xctk:IntegerUpDown x:Name="UdDegreeNewton" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+                </StackPanel>
+                <StackPanel Grid.Row="0">
+                    <Label x:Name="LbRunge">Укажите порядок точности для формулы Рунге</Label>
+                    <xctk:IntegerUpDown x:Name="UdDegreeRunge" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+                </StackPanel>
+            </Grid>
+            <StackPanel Orientation="Horizontal">
+                <Label>Среднеквадратичное отклонение =</Label>
+                <Label x:Name="LbStandartDeviation"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label>Абсолютное отклонение = </Label>
+                <Label x:Name="LbAbsoluteDeviation"></Label>
+            </StackPanel>
         </StackPanel>
         <lvc:CartesianChart x:Name="Chart" Grid.Column="1"></lvc:CartesianChart>
-    
     </Grid>
 </Window>

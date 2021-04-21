@@ -1,8 +1,7 @@
-﻿using SolutionSystemEquations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using SolutionSystemEquations;
+using NumericalMethods;
 
 
 namespace Differentiation
@@ -186,7 +185,7 @@ namespace Differentiation
                     }
                 }
             }
-            SystemEquations equations = new SystemEquations(matrixC, matrixFreeTerms);
+            SystemEquations equations = new SystemEquations(new Matrix(matrixC), new Matrix(matrixFreeTerms));
             double[,] res = equations.GausGordanMethod();
             List<Point> tempResult = new List<Point>(result);
             result.Clear();

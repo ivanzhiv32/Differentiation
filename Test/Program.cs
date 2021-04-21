@@ -35,7 +35,7 @@ namespace Test
             
 
             Console.WriteLine("Конечная разность");
-            List<Point> finalDiff = der.FiniteDifferenceMethod(TypeDifference.Right, 5);
+            List<Point> finalDiff = der.FiniteDifferenceMethod(TypeDifference.Right, 5).DerivativePoints;
             for (int i = 0; i < finalDiff.Count; i++)
             {
                 Console.WriteLine("Точка №{0} = {1:0.00}; {2:0.000}", i, finalDiff[i].X, finalDiff[i].Y);
@@ -62,12 +62,12 @@ namespace Test
                 Console.WriteLine("Точка №{0} = {1:0.00}; {2:0.000}", i, newton[i].X, newton[i].Y);
             }
 
-            double quadratikStandDev = der.StandartDevation(point, quadratik);
-            double cubikStandDev = der.StandartDevation(point, cubik);
+            double quadratikStandDev = der.StandartDeviation(point, quadratik);
+            double cubikStandDev = der.StandartDeviation(point, cubik);
             Console.WriteLine("Среднеквадратичное отклонение квадратика = {0}\nСреднеквадратичное отклонение кубика = {1}", quadratikStandDev, cubikStandDev);
 
-            double quadratikAbsDev = der.AbsoluteDevation(point, quadratik);
-            double cubikAbsDev = der.AbsoluteDevation(point, cubik);
+            double quadratikAbsDev = der.AbsoluteDeviation(point, quadratik);
+            double cubikAbsDev = der.AbsoluteDeviation(point, cubik);
             Console.WriteLine("Среднеквадратичное отклонение квадратика = {0}\nСреднеквадратичное отклонение кубика = {1}", quadratikAbsDev, cubikAbsDev);
 
             Console.Read();

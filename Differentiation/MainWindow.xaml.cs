@@ -34,8 +34,9 @@ namespace Differentiation
             CbTypesDifference.SelectedIndex = 0;
             seriesCollection = new SeriesCollection();
 
-            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0};
-            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0 };
+
+            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f(x)" };
+            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f'(x)" };
 
             Chart.Series = seriesCollection;
         }
@@ -57,7 +58,10 @@ namespace Differentiation
                 switch (CbMethods.SelectedIndex) 
                 {
                     case 0:
-                        pointsDerivative = der.FiniteDifferenceMethod((TypeDifference)CbTypesDifference.SelectedIndex, (int)UdDegree.Value);
+                        DifferentiationResult res = der.FiniteDifferenceMethod((TypeDifference)CbTypesDifference.SelectedIndex, (int)UdDegree.Value);
+                        pointsDerivative = res.DerivativePoints;
+                        LbAbsoluteDeviation.Content = res.AbsoluteDeviation;
+                        LbStandartDeviation.Content = res.StandartDeviation;
                         break;
                     case 1:
                         pointsDerivative = der.QuadraticInterpolation((int)UdDegree.Value);
@@ -123,12 +127,12 @@ namespace Differentiation
             variable.Add("x", 0);
 
             List<Point> points = new List<Point>();
-            double step = 0;
+            decimal step = 0;
             for (int i = 0; i < UdNumberPoints.Value; i++)
             {
-                variable["x"] = step;
-                points.Add(new Point(step, expression.Evaluate(variable).RealValue));
-                step += (double)UdStep.Value;
+                variable["x"] = (double)step;
+                points.Add(new Point((double)step, expression.Evaluate(variable).RealValue));
+                step += (decimal)UdStep.Value;
             }
 
             return points;

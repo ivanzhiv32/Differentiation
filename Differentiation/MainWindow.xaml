@@ -45,6 +45,8 @@
             </ComboBox>
             <Label x:Name="LbNewtonPolynomial">Укажите порядок полинома Ньютона:</Label>
             <xctk:IntegerUpDown x:Name="UdDegreeNewton" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+            <Label x:Name="LbRunge">Укажите порядок точности для формулы Рунге</Label>
+            <xctk:IntegerUpDown x:Name="UdDegreeRunge" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
         
         </StackPanel>
         <lvc:CartesianChart x:Name="Chart" Grid.Column="1"></lvc:CartesianChart>

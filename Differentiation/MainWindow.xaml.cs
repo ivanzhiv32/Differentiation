@@ -72,7 +72,7 @@ namespace Differentiation
                         pointsDerivative = der.NewtonPolynomialMethod((int)UdDegreeNewton.Value,(int)UdDegree.Value);
                         break;
                     case 5:
-                        pointsDerivative = der.QuadraticInterpolation((int)UdDegree.Value);
+                        pointsDerivative = der.RungeMethod((int)UdDegreeRunge.Value, (int)UdDegree.Value);
                         break;
                 }
 
@@ -99,11 +99,19 @@ namespace Differentiation
             {
                 LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Visible;
                 LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
+                LbRunge.Visibility = UdDegreeRunge.Visibility = Visibility.Hidden;
             }
             else if (CbMethods.SelectedIndex == 0) 
             {
                 LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Hidden;
                 LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Visible;
+                LbRunge.Visibility = UdDegreeRunge.Visibility = Visibility.Hidden;
+            }
+            else if (CbMethods.SelectedIndex == 5)
+            {
+                LbRunge.Visibility = UdDegreeRunge.Visibility = Visibility.Visible;
+                LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Hidden;
+                LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
             }
             else LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
         }

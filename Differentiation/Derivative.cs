@@ -149,10 +149,65 @@ namespace Differentiation
                         tempResult += res;
                     }
                     tempResult /= h;
-                    tempResultList.Add(new Point(result[k].X, tempResult / 10));
+                    tempResultList.Add(new Point(result[k].X, tempResult));
                 }
                 result = tempResultList;
             }
+            return result;
+        }
+
+        public List<Point> MethodUndefinedCoefficients(int degreeAccuracy, int degreeDerivate)
+        {
+            List<Point> result = new List<Point>(points);
+
+            double[] coefficients = new double[degreeAccuracy - 1];
+            double[,] matrixC = new double[result.Count, result.Count];
+            double[,] matrixFreeTerms = new double[result.Count, 1];
+
+            for (int i = 0; i < matrixC.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrixC.GetLength(1); j++)
+                {
+                    //Заполнение матрицы коэффицентов C
+                    matrixC[i, j] = Math.Pow(result[j].X - result[0].X, i);
+
+                    //Заполнение матрицы свободных членов
+                    if(j == 0)
+                    {
+                        if (i == 0) matrixFreeTerms[i, j] = 0;
+                        else if (i == 1) matrixFreeTerms[i, j] = 1;
+                        else
+                        {
+                            matrixFreeTerms[i, j] = i * Math.Pow(result[1].X - result[0].X, i - 1);
+                        }
+                    }
+                }
+            }
+
+
+
+            return result;
+        }
+
+        public List<Point> RungeMethod(int degreeAccuracy, int degreeDerivate)
+        {
+            List<Point> result = new List<Point>(points);
+            int k = 2;
+            double h = result[1].X - result[0].X;
+            double fx, fxh;
+
+            for (int i = 0; i < degreeDerivate; i++)
+            {
+                List<Point> tempResult = new List<Point>();
+                for (int j = 2; j < result.Count; j++)
+                {
+                    fx = (result[j].Y - result[j - 1].Y) / h;
+                    fxh = (result[j].Y - result[j - 2].Y) / (2 * h);
+                    tempResult.Add(new Point(result[j].X, fx + (fx - fxh) / (Math.Pow(k, degreeAccuracy) - 1)));
+                }
+                result = tempResult;
+            }
+
             return result;
         }
     }

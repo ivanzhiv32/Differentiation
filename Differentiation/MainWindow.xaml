@@ -31,7 +31,7 @@
                 <Label Grid.Row="1" Grid.Column="0">Количество точек:</Label>
                 <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" x:Name="UdNumberPoints" Value="60" Minimum="1"></xctk:IntegerUpDown>
                 <Label Grid.Row="2" Grid.Column="0">Шаг изменения:</Label>
-                <xctk:DoubleUpDown Grid.Row="2" Grid.Column="2" x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DoubleUpDown>
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="2" x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DecimalUpDown>
                 <Label Grid.Row="3" Grid.Column="0" Content="Порядок производной:"/>
                 <xctk:IntegerUpDown Grid.Row="3" Grid.Column="2" x:Name="UdDegree" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
             </Grid>

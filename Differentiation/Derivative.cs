@@ -6,6 +6,20 @@ using NumericalMethods;
 
 namespace Differentiation
 {
+    public struct DifferentiationResult 
+    {
+        public double AbsoluteDeviation { get; }
+        public double StandartDeviation { get; }
+        public List<Point> DerivativePoints { get; } //заменить на индексатор
+
+        public DifferentiationResult(List<Point> derivativePoints, double absoluteDeviation, double standartDeviation)
+        {
+            AbsoluteDeviation = absoluteDeviation;
+            StandartDeviation = standartDeviation;
+            DerivativePoints = derivativePoints;
+        }
+    }
+
     public enum TypeDifference 
     {
         Left,
@@ -16,11 +30,15 @@ namespace Differentiation
     public class Derivative
     {
         private List<Point> points;
+        private bool stepIsConstant;
+        private double step;
 
         public Derivative(List<Point> points) 
         {
             if (points.Count < 2) throw new Exception("Количество точек не может быть меньше двух");
             this.points = points;
+            stepIsConstant = CheckIncrement();
+            step = stepIsConstant ? points[1].X - points[0].X : double.NaN;
         }
 
         private int Factorial(int num) 
@@ -32,7 +50,6 @@ namespace Differentiation
             {
                 res *= i;
             }
-
             return res;
         }
 
@@ -54,6 +71,8 @@ namespace Differentiation
             return isConstant;
         }
 
+
+
         private double GetDeltaY(List<Point> points, int degree, int numPoint)
         {
             double result;
@@ -64,25 +83,24 @@ namespace Differentiation
             return result;
         }
 
-        public List<Point> FiniteDifferenceMethod(TypeDifference typeDifference, int degreeDerivates)
+        public DifferentiationResult FiniteDifferenceMethod(TypeDifference typeDifference, int degreeDerivates)
         {
-            List<Point> result = new List<Point>(points);
-
-            double h = result[1].X - result[0].X;
-
+            if (!stepIsConstant) throw new Exception("Шаг не является постоянным");
+            
+            List<Point> derivativePoints = new List<Point>(points);
             for (int i = 0; i < degreeDerivates; i++)
             {
                 List<Point> tempResult = new List<Point>();
-                for (int j = 1; j < result.Count - 1; j++)
+                for (int j = 1; j < derivativePoints.Count - 1; j++)
                 {
-                    if (typeDifference == TypeDifference.Left) tempResult.Add(new Point(result[j].X, (result[j].Y - result[j - 1].Y) / h));
-                    if (typeDifference == TypeDifference.Right) tempResult.Add(new Point(result[j].X, (result[j + 1].Y - result[j].Y) / h));
-                    if (typeDifference == TypeDifference.Center) tempResult.Add(new Point(result[j].X, (result[j + 1].Y - result[j - 1].Y) / (2 * h)));
+                    if (typeDifference == TypeDifference.Left) tempResult.Add(new Point(derivativePoints[j].X, (derivativePoints[j].Y - derivativePoints[j - 1].Y) / step));
+                    if (typeDifference == TypeDifference.Right) tempResult.Add(new Point(derivativePoints[j].X, (derivativePoints[j + 1].Y - derivativePoints[j].Y) / step));
+                    if (typeDifference == TypeDifference.Center) tempResult.Add(new Point(derivativePoints[j].X, (derivativePoints[j + 1].Y - derivativePoints[j - 1].Y) / (2 * step)));
                 }
-                result = tempResult;
+                derivativePoints = tempResult;
             }
 
-            return result;
+            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         public List<Point> QuadraticInterpolation(int degreeDerivates)
@@ -220,7 +238,51 @@ namespace Differentiation
             return result;
         }
 
-        public double StandartDevation(List<Point> startPoints, List<Point> finalPoints)
+        private double StandartDeviation(List<Point> finalPoints)
+        {
+            double s = 0;
+            int n = finalPoints.Count;
+            int k = 0;
+
+            for (int i = 0; i < finalPoints.Count; i++)
+            {
+                for (int j = k; j < points.Count; j++)
+                {
+                    if (points[j].X == finalPoints[i].X)
+                    {
+                        s += Math.Pow(Math.Abs(points[j].Y - finalPoints[i].Y), 2);
+                        k = j;
+                        break;
+                    }
+                }
+            }
+            double result = Math.Sqrt(s / n);
+
+            return result;
+        }
+
+        private double AbsoluteDeviation(List<Point> finalPoints)
+        {
+            double max = 0;
+            int k = 0;
+            for (int i = 0; i < finalPoints.Count; i++)
+            {
+                for (int j = k; j < points.Count; j++)
+                {
+                    double tempMax = points[j].Y - finalPoints[i].Y;
+                    if ((points[j].X == finalPoints[i].X) && ((tempMax) > max))
+                    {
+                        max = tempMax;
+                        k = j;
+                        break;
+                    }
+                }
+            }
+
+            return max;
+        }
+
+        public double StandartDeviation(List<Point> startPoints, List<Point> finalPoints)
         {
             double s = 0;
             int n = finalPoints.Count;
@@ -243,7 +305,7 @@ namespace Differentiation
             return result;
         }
 
-        public double AbsoluteDevation(List<Point> startPoints, List<Point> finalPoints)
+        public double AbsoluteDeviation(List<Point> startPoints, List<Point> finalPoints)
         {
             double max = 0;
             int k = 0;

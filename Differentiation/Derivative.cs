@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using NumericalMethods;
+using SolutionSystemEquations;
 
 
 namespace Differentiation
@@ -38,7 +38,7 @@ namespace Differentiation
             if (points.Count < 2) throw new Exception("Количество точек не может быть меньше двух");
             this.points = points;
             stepIsConstant = CheckIncrement();
-            step = stepIsConstant ? points[1].X - points[0].X : double.NaN;
+            step = points[1].X - points[0].X;
         }
 
         private int Factorial(int num) 
@@ -71,8 +71,6 @@ namespace Differentiation
             return isConstant;
         }
 
-
-
         private double GetDeltaY(List<Point> points, int degree, int numPoint)
         {
             double result;
@@ -84,9 +82,7 @@ namespace Differentiation
         }
 
         public DifferentiationResult FiniteDifferenceMethod(TypeDifference typeDifference, int degreeDerivates)
-        {
-            if (!stepIsConstant) throw new Exception("Шаг не является постоянным");
-            
+        {            
             List<Point> derivativePoints = new List<Point>(points);
             for (int i = 0; i < degreeDerivates; i++)
             {
@@ -103,139 +99,147 @@ namespace Differentiation
             return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
-        public List<Point> QuadraticInterpolation(int degreeDerivates)
+        public DifferentiationResult QuadraticInterpolation(int degreeDerivates)
         {
-            List<Point> result = new List<Point>(points);
-            double h = result[1].X - result[0].X;
+            List<Point> derivativePoints = new List<Point>(points);
+            double h = derivativePoints[1].X - derivativePoints[0].X;
             double q;
 
             for (int i = 0; i < degreeDerivates; i++)
             {
                 List<Point> tempResult = new List<Point>();
-                for (int j = 0; j < result.Count - 2; j++)
+                for (int j = 0; j < derivativePoints.Count - 2; j++)
                 {
-                    q = (result[j].X - result[j + 1].X) / h;
-                    tempResult.Add(new Point(result[j].X, (GetDeltaY(result, 1, j) + (2 * q - 1) / 2 * GetDeltaY(result, 2, j)) / h));
+                    q = (derivativePoints[j].X - derivativePoints[j + 1].X) / h;
+                    tempResult.Add(new Point(derivativePoints[j].X, (GetDeltaY(derivativePoints, 1, j) + (2 * q - 1) / 2 * GetDeltaY(derivativePoints, 2, j)) / h));
                 }
-                result = tempResult;
+                derivativePoints = tempResult;
             }
 
-            return result;
+            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
-        public List<Point> CubicInterpolationMethod(int degreeDerivates)
+        public DifferentiationResult CubicInterpolationMethod(int degreeDerivates)
         {
-            List<Point> result = new List<Point>(points);
-            double h = result[1].X - result[0].X;
+            List<Point> derivativePoints = new List<Point>(points);
+            double h = derivativePoints[1].X - derivativePoints[0].X;
             double q;
             for (int i = 0; i < degreeDerivates; i++)
             {
                 List<Point> tempResult = new List<Point>();
-                for (int j = 0; j < result.Count - 3; j++)
+                for (int j = 0; j < derivativePoints.Count - 3; j++)
                 {
-                    q = (result[j].X - result[j + 1].X) / h;
-                    tempResult.Add(new Point(result[j].X, (GetDeltaY(result, 1, j) + (2 * q - 1) / 2 * GetDeltaY(result, 2, j) +
-                            (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * GetDeltaY(result, 3, j)) / h));
+                    q = (derivativePoints[j].X - derivativePoints[j + 1].X) / h;
+                    tempResult.Add(new Point(derivativePoints[j].X, (GetDeltaY(derivativePoints, 1, j) + (2 * q - 1) / 2 * GetDeltaY(derivativePoints, 2, j) +
+                            (3 * Math.Pow(q, 2) - 6 * q + 2) / 6 * GetDeltaY(derivativePoints, 3, j)) / h));
                 }
-                result = tempResult;
+                derivativePoints = tempResult;
             }
 
-            return result;
+            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
-        public List<Point> NewtonPolynomialMethod(int degreePolynom, int degreeDerivate)
+        public DifferentiationResult NewtonPolynomialMethod(int degreePolynom, int degreeDerivate)
         {
             if (degreePolynom < 0) throw new Exception("Порядок конечной разности не может быть отрицательным числом.");
 
-            List<Point> result = new List<Point>(points);
-            double h = result[1].X - result[0].X;
+            List<Point> derivativePoints = new List<Point>(points);
+            double h = derivativePoints[1].X - derivativePoints[0].X;
             double q, tempResult;
             for (int m = 0; m < degreeDerivate; m++)
             {
                 List<Point> tempResultList = new List<Point>();
-                for (int k = 0; k < result.Count - degreePolynom; k++)
+                for (int k = 0; k < derivativePoints.Count - degreePolynom; k++)
                 {
-                    tempResult = result[k].Y;
+                    tempResult = derivativePoints[k].Y;
                     for (int i = 1; i < degreePolynom; i++)
                     {
-                        q = (result[i].X - result[i + 1].X) / h;
+                        q = (derivativePoints[i].X - derivativePoints[i + 1].X) / h;
                         double mult = 1;
                         for (int j = 0; j <= i; j++)
                         {
                             mult *= q - j + 1;
                         }
                         double res = mult / Factorial(i);
-                        res *= GetDeltaY(result, i, k);
+                        res *= GetDeltaY(derivativePoints, i, k);
                         tempResult += res;
                     }
                     tempResult /= h;
-                    tempResultList.Add(new Point(result[k].X, tempResult));
+                    tempResultList.Add(new Point(derivativePoints[k].X, tempResult));
                 }
-                result = tempResultList;
+                derivativePoints = tempResultList;
             }
-            return result;
+            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
-        public List<Point> MethodUndefinedCoefficients(int degreeAccuracy, int degreeDerivate)
+        public DifferentiationResult MethodUndefinedCoefficients(int degreeAccuracy)
         {
-            List<Point> result = new List<Point>(points);
+            if(degreeAccuracy >= points.Count) throw new Exception("Порядок точности не может быть больше кол-ва точек.");
 
-            double[] coefficients = new double[degreeAccuracy - 1];
-            double[,] matrixC = new double[result.Count, result.Count];
-            double[,] matrixFreeTerms = new double[result.Count, 1];
+            double[,] matrixC = new double[points.Count, points.Count];
+            double[,] matrixFreeTerms = new double[points.Count, 1];
 
             for (int i = 0; i < matrixC.GetLength(0); i++)
             {
                 for (int j = 0; j < matrixC.GetLength(1); j++)
                 {
                     //Заполнение матрицы коэффицентов C
-                    matrixC[i, j] = Math.Pow(result[j].X - result[0].X, i);
+                    if ((j == 0)&&(i != 0)) matrixC[i, j] = 0;
+                    else if (i == 0) matrixC[i, j] = 1;
+                    else matrixC[i, j] = Math.Pow(j * step, i);
 
                     //Заполнение матрицы свободных членов
-                    if(j == 0)
+                    if (j == 0)
                     {
-                        if (i == 0) matrixFreeTerms[i, j] = 0;
-                        else if (i == 1) matrixFreeTerms[i, j] = 1;
+                        if (i == 0) matrixFreeTerms[i, j] = i;
+                        else if (i == 1) matrixFreeTerms[i, j] = i;
                         else
                         {
-                            matrixFreeTerms[i, j] = i * Math.Pow(result[1].X - result[0].X, i - 1);
+                            matrixFreeTerms[i, j] = Math.Pow(step, i - 1) * i;
                         }
                     }
                 }
             }
-            SystemEquations equations = new SystemEquations(new Matrix(matrixC), new Matrix(matrixFreeTerms));
-            double[,] res = equations.GausGordanMethod();
-            List<Point> tempResult = new List<Point>(result);
-            result.Clear();
 
-            for (int i = 0; i < tempResult.Count; i++)
+            //Решение СЛАУ
+            SystemEquations equations = new SystemEquations(matrixC, matrixFreeTerms);
+            double[,] res = equations.GausGordanMethod();
+
+            //Вычисление производных
+            List<Point> derivativePoints = new List<Point>();
+            for (int i = 1; i < res.GetLength(0) - degreeAccuracy; i++)
             {
-                result.Add(new Point(tempResult[i].X, res[i, 0]));
+                double derivate = 0;
+                for (int j = 0; j <= degreeAccuracy; j++)
+                {
+                    derivate += res[j, 0] * points[i - 1 + j].Y;
+                }
+                derivativePoints.Add(new Point(points[i].X, derivate));
             }
 
-            return result;
+            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
-        public List<Point> RungeMethod(int degreeAccuracy, int degreeDerivate)
+        public DifferentiationResult RungeMethod(int degreeAccuracy, int degreeDerivate)
         {
-            List<Point> result = new List<Point>(points);
+            List<Point> derivativePoints = new List<Point>(points);
             int k = 2;
-            double h = result[1].X - result[0].X;
+            double h = derivativePoints[1].X - derivativePoints[0].X;
             double fx, fxh;
 
             for (int i = 0; i < degreeDerivate; i++)
             {
                 List<Point> tempResult = new List<Point>();
-                for (int j = 2; j < result.Count; j++)
+                for (int j = 2; j < derivativePoints.Count; j++)
                 {
-                    fx = (result[j].Y - result[j - 1].Y) / h;
-                    fxh = (result[j].Y - result[j - 2].Y) / (2 * h);
-                    tempResult.Add(new Point(result[j].X, fx + (fx - fxh) / (Math.Pow(k, degreeAccuracy) - 1)));
+                    fx = (derivativePoints[j].Y - derivativePoints[j - 1].Y) / h;
+                    fxh = (derivativePoints[j].Y - derivativePoints[j - 2].Y) / (2 * h);
+                    tempResult.Add(new Point(derivativePoints[j].X, fx + (fx - fxh) / (Math.Pow(k, degreeAccuracy) - 1)));
                 }
-                result = tempResult;
+                derivativePoints = tempResult;
             }
 
-            return result;
+            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         private double StandartDeviation(List<Point> finalPoints)

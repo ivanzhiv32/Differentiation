@@ -35,8 +35,8 @@ namespace Differentiation
             seriesCollection = new SeriesCollection();
 
 
-            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f(x)" };
-            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f'(x)" };
+            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f(x)"};
+            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f'(x)"};
 
             Chart.Series = seriesCollection;
         }
@@ -58,25 +58,40 @@ namespace Differentiation
                 switch (CbMethods.SelectedIndex) 
                 {
                     case 0:
-                        DifferentiationResult res = der.FiniteDifferenceMethod((TypeDifference)CbTypesDifference.SelectedIndex, (int)UdDegree.Value);
-                        pointsDerivative = res.DerivativePoints;
-                        LbAbsoluteDeviation.Content = res.AbsoluteDeviation;
-                        LbStandartDeviation.Content = res.StandartDeviation;
+                        DifferentiationResult resFiniteDifference = der.FiniteDifferenceMethod((TypeDifference)CbTypesDifference.SelectedIndex, (int)UdDegree.Value);
+                        pointsDerivative = resFiniteDifference.DerivativePoints;
+                        LbAbsoluteDeviation.Content = resFiniteDifference.AbsoluteDeviation;
+                        LbStandartDeviation.Content = resFiniteDifference.StandartDeviation;
                         break;
                     case 1:
-                        pointsDerivative = der.QuadraticInterpolation((int)UdDegree.Value);
+                        DifferentiationResult resQuadratic = der.QuadraticInterpolation((int)UdDegree.Value);
+                        pointsDerivative = resQuadratic.DerivativePoints;
+                        LbAbsoluteDeviation.Content = resQuadratic.AbsoluteDeviation;
+                        LbStandartDeviation.Content = resQuadratic.StandartDeviation;
                         break;
                     case 2:
-                        pointsDerivative = der.CubicInterpolationMethod((int)UdDegree.Value);
+                        DifferentiationResult resCubik = der.CubicInterpolationMethod((int)UdDegree.Value);
+                        pointsDerivative = resCubik.DerivativePoints;
+                        LbAbsoluteDeviation.Content = resCubik.AbsoluteDeviation;
+                        LbStandartDeviation.Content = resCubik.StandartDeviation;
                         break;
                     case 3:
-                        pointsDerivative = der.MethodUndefinedCoefficients(7, (int)UdDegree.Value);
+                        DifferentiationResult resMNK = der.MethodUndefinedCoefficients((int)UdDegreeMNK.Value);
+                        pointsDerivative = resMNK.DerivativePoints;
+                        LbAbsoluteDeviation.Content = resMNK.AbsoluteDeviation;
+                        LbStandartDeviation.Content = resMNK.StandartDeviation;
                         break;
                     case 4:
-                        pointsDerivative = der.NewtonPolynomialMethod((int)UdDegreeNewton.Value,(int)UdDegree.Value);
+                        DifferentiationResult resNewton = der.NewtonPolynomialMethod((int)UdDegreeNewton.Value, (int)UdDegree.Value);
+                        pointsDerivative = resNewton.DerivativePoints;
+                        LbAbsoluteDeviation.Content = resNewton.AbsoluteDeviation;
+                        LbStandartDeviation.Content = resNewton.StandartDeviation;
                         break;
                     case 5:
-                        pointsDerivative = der.RungeMethod((int)UdDegreeRunge.Value, (int)UdDegree.Value);
+                        DifferentiationResult resRunge = der.RungeMethod((int)UdDegreeRunge.Value, (int)UdDegree.Value);
+                        pointsDerivative = resRunge.DerivativePoints;
+                        LbAbsoluteDeviation.Content = resRunge.AbsoluteDeviation;
+                        LbStandartDeviation.Content = resRunge.StandartDeviation;
                         break;
                 }
 
@@ -84,7 +99,7 @@ namespace Differentiation
                 functionLine.Values.Clear();
                 derivativeLine.Values.Clear();
 
-                for (int i = 0; i < points.Count; i++) functionLine.Values.Add(new ObservablePoint(points[i].X, points[i].Y));
+                for (int i = 0; i < pointsDerivative.Count; i++) functionLine.Values.Add(new ObservablePoint(points[i].X, points[i].Y));
                 for (int i = 0; i < pointsDerivative.Count; i++) derivativeLine.Values.Add(new ObservablePoint(pointsDerivative[i].X, pointsDerivative[i].Y));
 
 
@@ -104,18 +119,28 @@ namespace Differentiation
                 LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Visible;
                 LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
                 LbRunge.Visibility = UdDegreeRunge.Visibility = Visibility.Hidden;
+                LbMNK.Visibility = UdDegreeMNK.Visibility = Visibility.Hidden;
             }
             else if (CbMethods.SelectedIndex == 0) 
             {
                 LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Hidden;
                 LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Visible;
                 LbRunge.Visibility = UdDegreeRunge.Visibility = Visibility.Hidden;
+                LbMNK.Visibility = UdDegreeMNK.Visibility = Visibility.Hidden;
             }
             else if (CbMethods.SelectedIndex == 5)
             {
                 LbRunge.Visibility = UdDegreeRunge.Visibility = Visibility.Visible;
                 LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Hidden;
                 LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
+                LbMNK.Visibility = UdDegreeMNK.Visibility = Visibility.Hidden;
+            }
+            if (CbMethods.SelectedIndex == 3)
+            {
+                LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = Visibility.Hidden;
+                LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
+                LbRunge.Visibility = UdDegreeRunge.Visibility = Visibility.Hidden;
+                LbMNK.Visibility = UdDegreeMNK.Visibility = Visibility.Visible;
             }
             else LbNewtonPolynomial.Visibility = UdDegreeNewton.Visibility = LbTypesDifference.Visibility = CbTypesDifference.Visibility = Visibility.Hidden;
         }

@@ -90,6 +90,6 @@
                 <Label x:Name="LbAbsoluteDeviation"></Label>
             </StackPanel>
         </StackPanel>
-        <lvc:CartesianChart x:Name="Chart" Grid.Column="1"></lvc:CartesianChart>
+        <lvc:CartesianChart x:Name="Chart" Grid.Column="1" LegendLocation="Bottom"></lvc:CartesianChart>
     </Grid>
 </Window>

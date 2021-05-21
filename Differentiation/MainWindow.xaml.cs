@@ -35,10 +35,12 @@ namespace Differentiation
             seriesCollection = new SeriesCollection();
 
 
-            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f(x)"};
-            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f'(x)"};
+            functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "Исходная функция"};
+            derivativeLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "Производная функция"};
 
             Chart.Series = seriesCollection;
+            Chart.AxisX.Add(new Axis() { Title = "X" });
+            Chart.AxisY.Add(new Axis() { Title = "Y" });
         }
 
         private void BtFindDerivative_Click(object sender, RoutedEventArgs e)

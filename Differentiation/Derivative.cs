@@ -1,30 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using SolutionSystemEquations;
+using NumericalMethods;
 
 
 namespace Differentiation
 {
-    public struct DifferentiationResult 
-    {
-        public double AbsoluteDeviation { get; }
-        public double StandartDeviation { get; }
-        public List<Point> DerivativePoints { get; } //заменить на индексатор
-
-        public DifferentiationResult(List<Point> derivativePoints, double absoluteDeviation, double standartDeviation)
-        {
-            AbsoluteDeviation = absoluteDeviation;
-            StandartDeviation = standartDeviation;
-            DerivativePoints = derivativePoints;
-        }
-    }
-
-    public enum TypeDifference 
+    public enum TypeDifference
     {
         Left,
         Right,
         Center
+    }
+
+    public struct DifferentiationResult 
+    {
+        private Point[] derivativePoints;
+
+        public DifferentiationResult(Point[] derivativePoints, double absoluteDeviation, double standartDeviation)
+        {
+            AbsoluteDeviation = absoluteDeviation;
+            StandartDeviation = standartDeviation;
+            this.derivativePoints = derivativePoints;
+        }
+
+        public double AbsoluteDeviation { get; }
+        public double StandartDeviation { get; }
+        public int CountPoints
+        {
+            get 
+            {
+                return derivativePoints.Length;
+            }
+        }
+
+        public Point this[int index] 
+        {
+            get 
+            {
+                return derivativePoints[index];
+            }
+        }
     }
 
     public class Derivative
@@ -96,7 +112,7 @@ namespace Differentiation
                 derivativePoints = tempResult;
             }
 
-            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
+            return new DifferentiationResult(derivativePoints.ToArray(), AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         public DifferentiationResult QuadraticInterpolation(int degreeDerivates)
@@ -116,7 +132,7 @@ namespace Differentiation
                 derivativePoints = tempResult;
             }
 
-            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
+            return new DifferentiationResult(derivativePoints.ToArray(), AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         public DifferentiationResult CubicInterpolationMethod(int degreeDerivates)
@@ -136,7 +152,7 @@ namespace Differentiation
                 derivativePoints = tempResult;
             }
 
-            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
+            return new DifferentiationResult(derivativePoints.ToArray(), AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         public DifferentiationResult NewtonPolynomialMethod(int degreePolynom, int degreeDerivate)
@@ -169,7 +185,7 @@ namespace Differentiation
                 }
                 derivativePoints = tempResultList;
             }
-            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
+            return new DifferentiationResult(derivativePoints.ToArray(), AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         public DifferentiationResult MethodUndefinedCoefficients(int degreeAccuracy)
@@ -202,7 +218,7 @@ namespace Differentiation
             }
 
             //Решение СЛАУ
-            SystemEquations equations = new SystemEquations(matrixC, matrixFreeTerms);
+            SystemEquations equations = new SystemEquations(new Matrix(matrixC), new Matrix(matrixFreeTerms));
             double[,] res = equations.GausGordanMethod();
 
             //Вычисление производных
@@ -217,7 +233,7 @@ namespace Differentiation
                 derivativePoints.Add(new Point(points[i].X, derivate));
             }
 
-            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
+            return new DifferentiationResult(derivativePoints.ToArray(), AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         public DifferentiationResult RungeMethod(int degreeAccuracy, int degreeDerivate)
@@ -239,7 +255,7 @@ namespace Differentiation
                 derivativePoints = tempResult;
             }
 
-            return new DifferentiationResult(derivativePoints, AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
+            return new DifferentiationResult(derivativePoints.ToArray(), AbsoluteDeviation(derivativePoints), StandartDeviation(derivativePoints));
         }
 
         private double StandartDeviation(List<Point> finalPoints)

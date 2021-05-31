@@ -6,7 +6,23 @@
         xmlns:local="clr-namespace:Differentiation"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" x:Class="Differentiation.MainWindow"
         mc:Ignorable="d"
-        Title="Численное дифференцирование" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Численное дифференцирование" Height="450" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <Style x:Key="MainDataInputElements">
+            <Setter Property="Control.Width" Value="100"></Setter>
+            <Setter Property="Control.Height" Value="25"></Setter>
+        </Style>
+        <Style x:Key="AdditionalDataInputElements" BasedOn="{StaticResource ResourceKey=MainDataInputElements}">
+            <Setter Property="Control.Width" Value="170"></Setter>
+        </Style>
+        <Style x:Key="MenuControls">
+            <Setter Property="Control.Width" Value="170"></Setter>
+            <Setter Property="Control.Height" Value="30"></Setter>
+        </Style>
+        <Style x:Key="HeaderInputAdditionalData">
+            <Setter Property="Control.HorizontalAlignment" Value="Center"></Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -15,7 +31,7 @@
         <StackPanel Orientation="Vertical" Grid.Column="0">
             <Label HorizontalAlignment="Center" Content="Функция f(x):"/>
             <TextBox HorizontalAlignment="Center" Width="100" Height="25" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="TbFunction" Text="sin(x)"></TextBox>
-            <Grid>
+            <Grid Margin="0,10,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
@@ -29,59 +45,59 @@
                 <!--<Label Content="Функция f(x):" Grid.Row="0" Grid.Column="0"/>
                 <TextBox Margin="0,0,0,0" x:Name="TbFunction" Text="sin(x)" Grid.Row="0" Grid.Column="1"></TextBox>-->
                 <Label Grid.Row="1" Grid.Column="0">Количество точек:</Label>
-                <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" x:Name="UdNumberPoints" Value="100" Minimum="1"></xctk:IntegerUpDown>
+                <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" x:Name="UdNumberPoints" Value="100" Minimum="1" Style="{StaticResource ResourceKey=MainDataInputElements}"></xctk:IntegerUpDown>
                 <Label Grid.Row="2" Grid.Column="0">Шаг изменения:</Label>
-                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="2" x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DecimalUpDown>
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="2" x:Name="UdStep" Value="0.1" Minimum="0.001" Style="{StaticResource ResourceKey=MainDataInputElements}"></xctk:DecimalUpDown>
                 <Label Grid.Row="3" Grid.Column="0" Content="Порядок производной:"/>
-                <xctk:IntegerUpDown Grid.Row="3" Grid.Column="2" x:Name="UdDegree" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+                <xctk:IntegerUpDown Grid.Row="3" Grid.Column="2" x:Name="UdDegree" Value="1" Minimum="1" Maximum="7" Style="{StaticResource ResourceKey=MainDataInputElements}"></xctk:IntegerUpDown>
             </Grid>
             <!--<Label Content="Введите функцию:"/>
             <TextBox x:Name="TbFunction" Text="sin(x)"></TextBox>-->
-            <DockPanel>
+            <!--<DockPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                    <!--<Label>Количество точек:</Label>
-                    <xctk:IntegerUpDown x:Name="UdNumberPoints" Value="60" Minimum="1"></xctk:IntegerUpDown>-->
+                    --><!--<Label>Количество точек:</Label>
+                    <xctk:IntegerUpDown x:Name="UdNumberPoints" Value="60" Minimum="1"></xctk:IntegerUpDown>--><!--
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="30,0,0,0">
-                    <!--<Label>Шаг:</Label>
-                    <xctk:DoubleUpDown x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DoubleUpDown>-->
+                    --><!--<Label>Шаг:</Label>
+                    <xctk:DoubleUpDown x:Name="UdStep" Value="0.1" Minimum="0.001"></xctk:DoubleUpDown>--><!--
                 </StackPanel>
-            </DockPanel>
+            </DockPanel>-->
             <!--<Label Content="Укажите порядок производной:"/>
             <xctk:IntegerUpDown x:Name="UdDegree" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>-->
-            <Label>Метод нахождения:</Label>
-            <ComboBox x:Name="CbMethods" SelectionChanged="CbMethods_SelectionChanged">
-                <ComboBoxItem>Метод конечных разностей</ComboBoxItem>
+            <Label HorizontalAlignment="Center" Margin="0,17,0,0">Метод нахождения:</Label>
+            <ComboBox x:Name="CbMethods" SelectionChanged="CbMethods_SelectionChanged" Width="200" Margin="0,0,0,10" Style="{StaticResource ResourceKey=MainDataInputElements}">
+                <ComboBoxItem x:Name="CbItemFiniteDifference">Метод конечных разностей</ComboBoxItem>
                 <ComboBoxItem>Метод квадратичной интерполяции</ComboBoxItem>
                 <ComboBoxItem>Метод кубической интерполяции</ComboBoxItem>
-                <ComboBoxItem>Метод неопределенных коэффициентов</ComboBoxItem>
-                <ComboBoxItem>Метод Ньютона</ComboBoxItem>
-                <ComboBoxItem>Метод Рунге</ComboBoxItem>
+                <ComboBoxItem x:Name="CbItemUndefinedCoefficients">Метод неопределенных коэффициентов</ComboBoxItem>
+                <ComboBoxItem x:Name="CbItemNewtonPolynomial">Метод Ньютона</ComboBoxItem>
+                <ComboBoxItem x:Name="CbItemRunge">Метод Рунге</ComboBoxItem>
             </ComboBox>
-            <Button x:Name="BtFindDerivative" Click="BtFindDerivative_Click">Найти производную</Button>
+            <Button Style="{StaticResource ResourceKey=MenuControls}" Margin="0,0,0,10" x:Name="BtFindDerivative" Click="BtFindDerivative_Click">Найти производную</Button>
             <Grid>
-                <StackPanel Orientation="Vertical" Grid.Row="0">
-                    <Label x:Name="LbTypesDifference">Тип конечной разности:</Label>
-                    <ComboBox x:Name="CbTypesDifference">
+                <StackPanel Orientation="Vertical" Grid.Row="0" x:Name="FiniteDifferencePanel">
+                    <Label x:Name="LbTypesDifference" Style="{StaticResource ResourceKey=HeaderInputAdditionalData}">Тип конечной разности:</Label>
+                    <ComboBox SelectedIndex="0" x:Name="CbTypesDifference" Style="{StaticResource ResourceKey=AdditionalDataInputElements}">
                         <ComboBoxItem>Левая</ComboBoxItem>
                         <ComboBoxItem>Правая</ComboBoxItem>
                         <ComboBoxItem>Центральная</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
-                <StackPanel Grid.Row="0">
-                    <Label x:Name="LbNewtonPolynomial">Укажите порядок полинома Ньютона:</Label>
-                    <xctk:IntegerUpDown x:Name="UdDegreeNewton" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+                <StackPanel Grid.Row="0" x:Name="NewtonPolynomialPanel">
+                    <Label x:Name="LbNewtonPolynomial" Style="{StaticResource ResourceKey=HeaderInputAdditionalData}">Порядок полинома Ньютона:</Label>
+                    <xctk:IntegerUpDown Style="{StaticResource ResourceKey=AdditionalDataInputElements}" x:Name="UdDegreeNewton" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
                 </StackPanel>
-                <StackPanel Grid.Row="0">
-                    <Label x:Name="LbRunge">Укажите порядок точности для формулы Рунге</Label>
-                    <xctk:IntegerUpDown x:Name="UdDegreeRunge" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
+                <StackPanel Grid.Row="0" x:Name="RungePanel">
+                    <Label x:Name="LbRunge" Style="{StaticResource ResourceKey=HeaderInputAdditionalData}">Порядок точности для формулы Рунге:</Label>
+                    <xctk:IntegerUpDown Style="{StaticResource ResourceKey=AdditionalDataInputElements}" x:Name="UdDegreeRunge" Value="1" Minimum="1" Maximum="7"></xctk:IntegerUpDown>
                 </StackPanel>
-                <StackPanel Grid.Row="0">
-                    <Label x:Name="LbMNK">Укажите порядок точности для формулы МНК</Label>
-                    <xctk:IntegerUpDown x:Name="UdDegreeMNK" Value="25" Minimum="25" Maximum="100"></xctk:IntegerUpDown>
+                <StackPanel Grid.Row="0" x:Name="UndefinedCoefficientsPanel">
+                    <Label x:Name="LbMNK" Style="{StaticResource ResourceKey=HeaderInputAdditionalData}">Порядок точности для формулы МНК:</Label>
+                    <xctk:IntegerUpDown Style="{StaticResource ResourceKey=AdditionalDataInputElements}" x:Name="UdDegreeMNK" Value="25" Minimum="25" Maximum="100"></xctk:IntegerUpDown>
                 </StackPanel>
             </Grid>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="0,17,0,0">
                 <Label>Среднеквадратичное отклонение =</Label>
                 <Label x:Name="LbStandartDeviation"></Label>
             </StackPanel>

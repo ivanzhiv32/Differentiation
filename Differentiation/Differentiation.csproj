@@ -140,11 +140,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\3 курс 1 семестр\Численные методы\Решение СЛАУ\SolutionSystemEquations\SolutionSystemEquations.csproj">
-      <Project>{0a28fa2e-cfb8-4872-85dc-4989a5f7bd02}</Project>
-      <Name>SolutionSystemEquations</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
